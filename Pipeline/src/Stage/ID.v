@@ -2,6 +2,7 @@
 `include "ID/Controller.v"
 `include "ID/Decoder.v"
 `include "ID/RegFile.v"
+`include "ID/CSR_RegFile.v"
 
 module ID (
     input         clk,
@@ -22,14 +23,24 @@ module ID (
     output [31:0] Read_data_2,
 
     output      branch_taken,
-////Controller
+////decoder
     output          Branch,
     output          MemREAD,
     output          MemtoReg,
     output [1:0]  MemWrite,
     output           ALUSrc,
     output           RegWrite,
-    output [4:0]  ALUOp
+    output [4:0]  ALUOp,
+
+////CSR_Regfile
+    output [31:0] csr_rd,
+    output [31:0] clint_csr_mstatus,
+    output [31:0] clint_csr_mepc,
+    output [31:0] clint_csr_mtvec,
+    output        interrupt_enable,
+
+///
+
 );
 
     Branch_Comparator branch_comparator(
@@ -52,6 +63,23 @@ module ID (
         .RegWrite(RegWrite)
     );
 
+    CSR csr(
+        .clk(clk), 
+        .rst(rst), 
+        .csr_we_ex(csr_we_ex), 
+        .csr_ra_id(csr_ra_id), 
+        .csr_wa_ex(csr_wa_ex), 
+        .csr_wd_ex(csr_wd_ex), 
+        .we_clint(we_clint), 
+        .wa_clint(wa_clint), 
+        .wd_clint(wd_clint), 
+        .csr_rd(csr_rd), 
+        .clint_csr_mstatus(clint_csr_mstatus), 
+        .clint_csr_mepc(clint_csr_mepc), 
+        .clint_csr_mtvec(clint_csr_mtvec), 
+        .interrupt_enable(interrupt_enable)
+    );
+
     Decoder decoder(
         .instruction(instruction), 
         .opcode(opcode), 
@@ -59,7 +87,15 @@ module ID (
         .rs2(rs2), 
         .rd(rd_out), 
         .funct3(funct3), 
-        .funct7(funct7)
+        .funct7(funct7), 
+        .Branch(Branch), 
+        .MemREAD(MemREAD), 
+        .MemtoReg(MemtoReg), 
+        .MemWrite(MemWrite), 
+        .ALUSrc(ALUSrc), 
+        .RegWrite(RegWrite), 
+        .csr_we_id2ex(csr_we_id2ex), 
+        .csr_addr(csr_addr)
     );
 
     RegFile regfile(

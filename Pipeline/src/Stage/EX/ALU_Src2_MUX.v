@@ -9,9 +9,7 @@ module ALU_Sr2c_MUX (
 );
     always@*begin
         case(ForwardB)
-            2'b00:begin
-                ALU_in2 = (ALU_Src) ? imm : Read_data_2;
-            end
+            2'b00: ALU_in2 = (ALU_Src) ? imm : Read_data_2;
             2'b01: ALU_in2 = Write_data;
             2'b10: ALU_in2 = rd_data;
         endcase
