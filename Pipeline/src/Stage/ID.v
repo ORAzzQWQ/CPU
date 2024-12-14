@@ -3,6 +3,7 @@
 `include "ID/Decoder.v"
 `include "ID/RegFile.v"
 `include "ID/CSR_RegFile.v"
+`include "CLINT.v"
 
 module ID (
     input         clk,
@@ -58,40 +59,6 @@ module ID (
         .RegWrite(RegWrite)
     );
 
-    CSR csr(
-        .clk(clk), 
-        .rst(rst), 
-        .csr_we_ex(csr_we_ex), 
-        .csr_ra_id(csr_ra_id), 
-        .csr_wa_ex(csr_wa_ex), 
-        .csr_wd_ex(csr_wd_ex), 
-        .we_clint(we_clint), 
-        .wa_clint(wa_clint), 
-        .wd_clint(wd_clint), 
-        .csr_rd(csr_rd), 
-        .clint_csr_mstatus(clint_csr_mstatus), 
-        .clint_csr_mepc(clint_csr_mepc), 
-        .clint_csr_mtvec(clint_csr_mtvec), 
-        .interrupt_enable(interrupt_enable)
-    );
-
-    CSR csr(
-        .clk(clk), 
-        .rst(rst), 
-        .csr_we_ex(csr_we_ex), 
-        .csr_ra_id(csr_ra_id), 
-        .csr_wa_ex(csr_wa_ex), 
-        .csr_wd_ex(csr_wd_ex), 
-        .we_clint(we_clint), 
-        .wa_clint(wa_clint), 
-        .wd_clint(wd_clint), 
-        .csr_rd(csr_rd), 
-        .clint_csr_mstatus(clint_csr_mstatus), 
-        .clint_csr_mepc(clint_csr_mepc), 
-        .clint_csr_mtvec(clint_csr_mtvec), 
-        .interrupt_enable(interrupt_enable)
-    );
-
     wire [11:0] csr_addr;
     Decoder decoder(
         .instruction(instruction), 
@@ -121,8 +88,6 @@ module ID (
         .Read_data_1(Read_data_1), 
         .Read_data_2(Read_data_2)
     );
-
-
 
     CSR_RegFile csr(
         .clk(clk),
