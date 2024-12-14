@@ -1,0 +1,9 @@
+{"vcs1":{"timestamp_begin":1734093937.411436518, "rt":0.06, "ut":0.01, "st":0.04}}
+{"vcselab":{"timestamp_begin":1734093937.501646208, "rt":0.06, "ut":0.04, "st":0.02}}
+{"link":{"timestamp_begin":1734093937.585358512, "rt":0.10, "ut":0.06, "st":0.04}}
+{"SNPS_VCS_INTERNAL_ROOT_START_TIME": 1734093937.318543559}
+{"VCS_COMP_START_TIME": 1734093937.318543559}
+{"VCS_COMP_END_TIME": 1734093937.811275759}
+{"VCS_USER_OPTIONS": "-R -full64 -sverilog -debug_access+all quicksort_dpi.sv +incdir+/home/summer/Synopsys/vcs/2024.09/include"}
+{"vcs1": {"peak_mem": 303220}}
+{"vcselab": {"peak_mem": 157856}}

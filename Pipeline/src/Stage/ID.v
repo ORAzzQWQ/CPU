@@ -23,7 +23,7 @@ module ID (
     output [31:0] Read_data_2,
 
     output      branch_taken,
-////Controller
+////decoder
     output          Branch,
     output          MemREAD,
     output          MemtoReg,
@@ -58,6 +58,40 @@ module ID (
         .RegWrite(RegWrite)
     );
 
+    CSR csr(
+        .clk(clk), 
+        .rst(rst), 
+        .csr_we_ex(csr_we_ex), 
+        .csr_ra_id(csr_ra_id), 
+        .csr_wa_ex(csr_wa_ex), 
+        .csr_wd_ex(csr_wd_ex), 
+        .we_clint(we_clint), 
+        .wa_clint(wa_clint), 
+        .wd_clint(wd_clint), 
+        .csr_rd(csr_rd), 
+        .clint_csr_mstatus(clint_csr_mstatus), 
+        .clint_csr_mepc(clint_csr_mepc), 
+        .clint_csr_mtvec(clint_csr_mtvec), 
+        .interrupt_enable(interrupt_enable)
+    );
+
+    CSR csr(
+        .clk(clk), 
+        .rst(rst), 
+        .csr_we_ex(csr_we_ex), 
+        .csr_ra_id(csr_ra_id), 
+        .csr_wa_ex(csr_wa_ex), 
+        .csr_wd_ex(csr_wd_ex), 
+        .we_clint(we_clint), 
+        .wa_clint(wa_clint), 
+        .wd_clint(wd_clint), 
+        .csr_rd(csr_rd), 
+        .clint_csr_mstatus(clint_csr_mstatus), 
+        .clint_csr_mepc(clint_csr_mepc), 
+        .clint_csr_mtvec(clint_csr_mtvec), 
+        .interrupt_enable(interrupt_enable)
+    );
+
     wire [11:0] csr_addr;
     Decoder decoder(
         .instruction(instruction), 
@@ -66,11 +100,14 @@ module ID (
         .rs2(rs2), 
         .rd(rd_out), 
         .funct3(funct3), 
-        .funct7(funct7),
-
-        .interrupt_assert(interrupt_assert),
-        .interrupt_handler_address(interrupt_handler_address),
-        .csr_we_id2ex(), //to id_ex
+        .funct7(funct7), 
+        .Branch(Branch), 
+        .MemREAD(MemREAD), 
+        .MemtoReg(MemtoReg), 
+        .MemWrite(MemWrite), 
+        .ALUSrc(ALUSrc), 
+        .RegWrite(RegWrite), 
+        .csr_we_id2ex(csr_we_id2ex), 
         .csr_addr(csr_addr)
     );
 
