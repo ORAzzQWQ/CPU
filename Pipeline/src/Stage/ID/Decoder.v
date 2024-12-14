@@ -14,6 +14,9 @@ module Decoder(
     output reg  [1:0]   MemWrite,
     output reg          ALUSrc,
     output reg          RegWrite,
+    
+    input interrupt_assert,
+    input [31:0] interrupt_handler_address,
     output reg          csr_we_id2ex,
     output reg  [11:0]  csr_addr
 );
@@ -30,6 +33,12 @@ module Decoder(
         func3 == `CSRRW || func3 == `CSRRWI ||
         func3 == `CSRRS || func3 == `CSRRSI ||
         func3 == `CSRRC || func3 == `CSRRCI );
+
+    //jump_flag & jump_addr須修改(如果遇到中斷，還要恢復)
+    // assign if_jump_flag = (interrupt_assert || Branch);
+    // assign if_jump_address = interrupt_assert ? interrupt_handler_address :
+    //                          immediate + ((opcode == 7'b1100111) ? rs1 : instruction_address);
+
 
     always@*begin
         case(opcode)

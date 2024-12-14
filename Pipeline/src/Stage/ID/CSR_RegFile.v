@@ -23,7 +23,7 @@ module CSR (
 );
 
     // CSR Registers
-    reg [63:0] cycles;
+    // reg [63:0] cycles;
     reg [31:0] mtvec;
     reg [31:0] mcause;
     reg [31:0] mepc;
@@ -34,14 +34,14 @@ module CSR (
     wire [11:0] wa, ra;
     wire [31:0] wd, rd;
 
-    // Cycle counter
-    always @(posedge clk or posedge rst) begin
-        if (rst) begin
-            cycles <= 64'b0;
-        end else begin
-            cycles <= cycles + 1'b1;
-        end
-    end
+    // // Cycle counter -> 有要加timer再處理
+    // always @(posedge clk or posedge rst) begin
+    //     if (rst) begin
+    //         cycles <= 64'b0;
+    //     end else begin
+    //         cycles <= cycles + 1'b1;
+    //     end
+    // end
 
     // CSR write control
     always @(*) begin
@@ -101,7 +101,7 @@ module CSR (
     assign clint_csr_mepc = mepc;
     assign clint_csr_mstatus = mstatus;
 
-    // // CSR read operation for CLINT
+    // // CSR read operation for CLINT ->目前直接將mstatus等的值傳出去，不需要再傳地址
     // always @(*) begin
     //     case (ra_clint)
     //         `CYCLEL:   clint_reg_data = cycles[31:0];

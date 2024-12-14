@@ -85,7 +85,7 @@ module CLINT (
                         end
                         STATE_ASYNC_ASSERT: begin
                             csr_state <= CSR_MEPC;
-                            instruction_address <= jump_flag ? jump_address : instruction_address_if;
+                            inst_addr <= jump_flag ? jump_addr : inst_addr_if;
                             cause <= interrupt_flag[0] ? 32'h80000007 : 32'h8000000B;
                         end
                         STATE_MRET: begin

@@ -2,6 +2,7 @@
 `include "ID/Controller.v"
 `include "ID/Decoder.v"
 `include "ID/RegFile.v"
+`include "ID/CSR_RegFile.v"
 
 module ID (
     input         clk,
@@ -32,6 +33,11 @@ module ID (
     output [4:0]  ALUOp
 );
 
+    //csr wire
+    wire [31:0] csr_wd, mepc, mstatus, mtvec, interrupt_handler_address ;
+    wire interrupt_enable, csr_we, interrupt_assert;
+    wire [11:0] csr_wa;
+
     Branch_Comparator branch_comparator(
         .funct3(funct3), 
         .opcode(opcode), 
@@ -52,6 +58,7 @@ module ID (
         .RegWrite(RegWrite)
     );
 
+    wire [11:0] csr_addr;
     Decoder decoder(
         .instruction(instruction), 
         .opcode(opcode), 
@@ -59,7 +66,12 @@ module ID (
         .rs2(rs2), 
         .rd(rd_out), 
         .funct3(funct3), 
-        .funct7(funct7)
+        .funct7(funct7),
+
+        .interrupt_assert(interrupt_assert),
+        .interrupt_handler_address(interrupt_handler_address),
+        .csr_we_id2ex(), //to id_ex
+        .csr_addr(csr_addr)
     );
 
     RegFile regfile(
@@ -71,6 +83,54 @@ module ID (
         .RegWrite(RegWrite_in), 
         .Read_data_1(Read_data_1), 
         .Read_data_2(Read_data_2)
+    );
+
+
+
+    CSR_RegFile csr(
+        .clk(clk),
+        .rst(rst),
+        .csr_ra_id(csr_addr),
+        
+        //id_ex input
+        .csr_we_ex(),
+        .csr_wa_ex(),
+        .csr_wd_ex(),
+
+        .we_clint(csr_we),
+        .wa_clint(csr_wa),
+        .wd_clint(csr_wd),
+        .csr_rd(), //to id_ex
+
+        .clint_csr_mstatus(mstatus),
+        .clint_csr_mepc(mepc),
+        .clint_csr_mtvec(mtvec),
+        .interrupt_enable(interrupt_enable)
+    );
+
+    CLINT Clint(
+        .clk(clk),
+        .rst(rst),
+        .interrupt_flag(),
+        .inst(instruction),
+        .inst_addr_if(pc),
+
+        .jump_flag(),
+        .jump_addr(),
+
+        .csr_mtvec(mtvec),
+        .csr_mepc(mepc),
+        .csr_mstatus(mstatus),
+        .interrupt_enable(interrupt_enable),
+        
+        .ctrl_stall_flag(),
+
+        .csr_reg_we(csr_we),
+        .csr_reg_wa(csr_wa),
+        .csr_reg_wd(csr_wd),
+
+        .id_interrupt_handler_addr(interrupt_handler_address),
+        .id_interrupt_assert(interrupt_assert)
     );
 
 
